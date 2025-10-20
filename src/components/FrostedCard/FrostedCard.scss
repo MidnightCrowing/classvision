@@ -1,0 +1,35 @@
+.frosted-card {
+  // 毛玻璃核心
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  // 形状 & 阴影
+  border-radius: 4px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+
+  // 边框与高光
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  outline: 1px solid rgba(255, 255, 255, 0.2);
+
+  // 布局
+  padding: 8px 10px;
+  transition: all 0.25s ease;
+  color: #1e1e1e;
+
+  &:not(.no-hover):hover {
+    box-shadow: 0 6px 22px rgba(0, 0, 0, 0.12);
+    background: rgba(255, 255, 255, 0.75);
+    transform: translateY(-2px);
+  }
+
+  .frosted-card-header {
+    @apply font-600 text-1.05rem color-#0b6edc tracking-0.3px text-center;
+    @apply mb-10px;
+    @apply cursor-default select-none;
+  }
+
+  .frosted-card-body {
+    @apply text-0.95rem lh-1.6;
+  }
+}
