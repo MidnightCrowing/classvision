@@ -1,10 +1,12 @@
-import { AttentionHeatmap } from '~/components/AttentionHeatmap.tsx'
-import { BehaviorBarChart } from '~/components/BehaviorBarChart.tsx'
-import { BehaviorSankey } from '~/components/BehaviorSankey.tsx'
-import { FocusLabel } from '~/components/FocusLabel.tsx'
-import { FocusLineChart } from '~/components/FocusLineChart.tsx'
-import { ProcessedVideo } from '~/components/ProcessedVideo.tsx'
-import { YoloOutputTable } from '~/components/Yolo0utputTable.tsx'
+import { lazy } from 'react'
+
+const AttentionHeatmap = lazy(() => import('~/components/AttentionHeatmap.tsx'))
+const BehaviorBarChart = lazy(() => import('~/components/BehaviorBarChart.tsx'))
+const BehaviorSankey = lazy(() => import('~/components/BehaviorSankey.tsx'))
+const FocusLabel = lazy(() => import('~/components/FocusLabel.tsx'))
+const FocusLineChart = lazy(() => import('~/components/FocusLineChart.tsx'))
+const ProcessedVideo = lazy(() => import('~/components/ProcessedVideo.tsx'))
+const YoloOutputTable = lazy(() => import('~/components/Yolo0utputTable.tsx'))
 
 export function Dashboard() {
   return (
@@ -29,7 +31,7 @@ export function Dashboard() {
         max-w="45%"
         box-border
         pos="left-10px top-5px bottom-8px"
-        z="1"
+        z="2"
         flex="~ col"
         gap="10px"
       >
@@ -46,7 +48,7 @@ export function Dashboard() {
         max-w="45%"
         box-border
         pos="right-10px top-5px bottom-8px"
-        z="1"
+        z="2"
         flex="~ col justify-between"
       >
         <BehaviorBarChart h="40%" />

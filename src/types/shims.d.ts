@@ -17,5 +17,29 @@ declare module 'react' {
     delay?: string
     brightness?: string
     size?: string | number
+    bg?: string
+    grow?: boolean | string
+    'whitespace-nowrap'?: boolean | string
+    lh?: string
+    pos?: string
+    'translate-x'?: string
+    z?: string
+    w?: string
+    // 允许任意额外属性（兼容更多 Attributify 写法 / 自定义属性）
+    [key: string]: any
   }
 }
+
+// 允许在 JSKX 自定义组件上传任意 Attributify 属性
+declare global {
+  namespace JSX {
+    interface IntrinsicAttributes {
+      [key: string]: any
+    }
+  }
+
+  // 补充缺失的类型，避免找不到名称
+  type PresenceBadgeStatus = 'available' | 'away' | 'busy' | 'offline' | string
+}
+
+export {}

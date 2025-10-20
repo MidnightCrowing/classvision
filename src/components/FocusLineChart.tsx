@@ -1,16 +1,9 @@
 // 专注度折线图
 import ReactECharts from 'echarts-for-react'
-import { useEffect, useRef, useState } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 
 import { FrostedCard } from '~/components/FrostedCard'
-
-interface FocusData {
-  time: string
-  highlyFocused: number
-  moderatelyFocused: number
-  lowFocused: number
-}
+import { useClassVisionData } from '~/providers/ClassVisionProvider'
 
 function TooltipRow({ color, name, value }: { color: string, name: string, value: number }) {
   return (
@@ -34,50 +27,13 @@ function TooltipRow({ color, name, value }: { color: string, name: string, value
   )
 }
 
-export function FocusLineChart({ ...props }) {
-  const [data, setData] = useState<FocusData[]>([])
-  const lastValues = useRef({ highlyFocused: 0, moderatelyFocused: 0, lowFocused: 0 })
+export default function FocusLineChart({ ...props }) {
+  const { focusSeriesLastMinute } = useClassVisionData()
 
-  // 初始化 60s 空数据
-  useEffect(() => {
-    const now = Date.now()
-    const initData = Array.from({ length: 60 }, (_, i) => ({
-      time: new Date(now - (59 - i) * 1000).toLocaleTimeString('zh-CN', {
-        minute: '2-digit',
-        second: '2-digit',
-      }),
-      highlyFocused: 0,
-      moderatelyFocused: 0,
-      lowFocused: 0,
-    }))
-    setData(initData)
-  }, [])
-
-  // 模拟 WebSocket 数据流（每秒更新）
-  useEffect(() => {
-    const timer = setInterval(() => {
-      const newTime = new Date().toLocaleTimeString('zh-CN', {
-        minute: '2-digit',
-        second: '2-digit',
-      })
-
-      // 模拟随机人数变化（例如总人数在 0-20 之间波动）
-      const newValues = {
-        highlyFocused: Math.max(0, Math.min(20, lastValues.current.highlyFocused + (Math.random() * 4 - 2))),
-        moderatelyFocused: Math.max(0, Math.min(20, lastValues.current.moderatelyFocused + (Math.random() * 4 - 2))),
-        lowFocused: Math.max(0, Math.min(20, lastValues.current.lowFocused + (Math.random() * 4 - 2))),
-      }
-
-      lastValues.current = newValues
-
-      setData((prev) => {
-        const newData = [...prev.slice(1), { time: newTime, ...newValues }]
-        return newData
-      })
-    }, 1000)
-
-    return () => clearInterval(timer)
-  }, [])
+  const times = focusSeriesLastMinute.map(d => d.time)
+  const high = focusSeriesLastMinute.map(d => d.HighlyFocused)
+  const mid = focusSeriesLastMinute.map(d => d.ModeratelyFocused)
+  const low = focusSeriesLastMinute.map(d => d.LowFocused)
 
   const option = {
     grid: {
@@ -108,7 +64,7 @@ export function FocusLineChart({ ...props }) {
     xAxis: {
       type: 'category',
       boundaryGap: false,
-      data: data.map(d => d.time),
+      data: times,
       axisLabel: { color: '#000' },
       axisLine: { lineStyle: { color: '#999' } },
     },
@@ -123,7 +79,7 @@ export function FocusLineChart({ ...props }) {
       {
         name: '高度专注',
         type: 'line',
-        data: data.map(d => d.highlyFocused),
+        data: high,
         smooth: true,
         showSymbol: false,
         lineStyle: { color: '#6AFF67', width: 3 },
@@ -132,7 +88,7 @@ export function FocusLineChart({ ...props }) {
       {
         name: '一般专注',
         type: 'line',
-        data: data.map(d => d.moderatelyFocused),
+        data: mid,
         smooth: true,
         showSymbol: false,
         lineStyle: { color: '#FFD966', width: 3 },
@@ -141,7 +97,7 @@ export function FocusLineChart({ ...props }) {
       {
         name: '注意力低',
         type: 'line',
-        data: data.map(d => d.lowFocused),
+        data: low,
         smooth: true,
         showSymbol: false,
         lineStyle: { color: '#FF6C6C', width: 3 },

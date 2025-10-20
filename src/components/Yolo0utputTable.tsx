@@ -32,7 +32,7 @@ const columns = [
   { columnKey: 'timestamp', label: '时间' },
 ]
 
-export function YoloOutputTable({ ...props }) {
+export default function YoloOutputTable({ ...props }) {
   const [items, setItems] = useState<DetectionItem[]>([])
   const tableBodyRef = useRef<HTMLDivElement>(null)
 

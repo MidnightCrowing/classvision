@@ -1,7 +1,13 @@
-export function FocusLabelCard({ label, value, ...props}: {
+import type { HTMLAttributes } from 'react'
+
+type FocusLabelCardProps = {
   label: string
   value: string
-}) {
+  bg?: string
+  grow?: boolean
+} & HTMLAttributes<HTMLDivElement>
+
+export function FocusLabelCard({ label, value, ...props }: FocusLabelCardProps) {
   return (
     <div
       p="20px"

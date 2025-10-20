@@ -1,25 +1,12 @@
 // 六种行为类别柱状图
 import ReactECharts from 'echarts-for-react'
-import { useEffect, useState } from 'react'
 
 import { FrostedCard } from '~/components/FrostedCard'
-import type { BehaviorNode } from '~/constants/behaviors.ts'
 import { behaviors } from '~/constants/behaviors.ts'
+import { useClassVisionData } from '~/providers/ClassVisionProvider'
 
-interface BehaviorData extends BehaviorNode {
-  value: number
-}
-
-const initialData: BehaviorData[] = behaviors.map(b => ({
-  name: b.name,
-  label: b.label,
-  description: b.description,
-  color: b.color,
-  value: 0,
-}))
-
-export function BehaviorBarChart({ ...props }) {
-  const [data, setData] = useState(initialData)
+export default function BehaviorBarChart({ ...props }) {
+  const { countsNow } = useClassVisionData()
 
   const option = {
     grid: {
@@ -37,7 +24,8 @@ export function BehaviorBarChart({ ...props }) {
     },
     yAxis: {
       type: 'category',
-      data: data.map(d => d.name),
+      data: behaviors.map(d => d.name),
+      inverse: true,
       axisLabel: { color: '#000', fontSize: 12 },
       axisLine: { show: false },
       axisTick: { show: false },
@@ -45,11 +33,12 @@ export function BehaviorBarChart({ ...props }) {
     series: [
       {
         type: 'bar',
-        data: data.map(d => ({
-          value: d.value,
+        data: behaviors.map(d => ({
+          value: countsNow[d.label as keyof typeof countsNow] ?? 0,
           itemStyle: { color: d.color },
         })),
         barWidth: 20,
+        barCategoryGap: '20%',
         label: {
           show: true,
           position: 'right',
@@ -61,20 +50,6 @@ export function BehaviorBarChart({ ...props }) {
       },
     ],
   }
-
-  // 模拟实时数据更新
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setData(prev =>
-        prev.map(d => ({
-          ...d,
-          value: Math.max(0, Math.round(d.value + (Math.random() * 6 - 3))),
-        })),
-      )
-    }, 1000)
-
-    return () => clearInterval(interval)
-  }, [])
 
   return (
     <FrostedCard title="学生行为类别统计" {...props}>

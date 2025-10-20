@@ -1,38 +1,14 @@
 // 行为转移桑基图
 import ReactECharts from 'echarts-for-react'
-import { useEffect, useState } from 'react'
 
 import { FrostedCard } from '~/components/FrostedCard'
 import { behaviors } from '~/constants/behaviors.ts'
+import { useClassVisionData } from '~/providers/ClassVisionProvider'
 
-interface SankeyData {
-  source: string
-  target: string
-  value: number
-}
+export default function BehaviorSankey({ ...props }) {
+  const { sankeyLinksMinuteAgoToNow } = useClassVisionData()
 
-export function BehaviorSankey({ ...props }) {
-  const [links, setLinks] = useState<SankeyData[]>([])
-
-  const generateRandomData = (): SankeyData[] => {
-    const result: SankeyData[] = []
-    behaviors.forEach((b1) => {
-      behaviors.forEach((b2) => {
-        const val = Math.max(0, Math.round(Math.random() * 10 - 2))
-        if (val > 0)
-          result.push({ source: `前一分钟-${b1.name}`, target: `当前-${b2.name}`, value: val })
-      })
-    })
-    return result
-  }
-
-  useEffect(() => {
-    setLinks(generateRandomData())
-    const interval = setInterval(() => setLinks(generateRandomData()), 1000)
-    return () => clearInterval(interval)
-  }, [])
-
-  // 固定节点位置配置
+  // 固定节点位置配置（左右两列，顺序按 behaviors 常量）
   const leftX = 0.05
   const rightX = 0.95
   const topMargin = 0.08
@@ -64,16 +40,18 @@ export function BehaviorSankey({ ...props }) {
     series: [
       {
         type: 'sankey',
-        layout: 'none', // 必需：使用手动坐标
+        layout: 'none', // 使用手动坐标
         emphasis: { focus: 'adjacency' },
         nodeAlign: 'justify',
         draggable: false,
+        layoutIterations: 0,
         lineStyle: {
           color: 'gradient',
           opacity: 0.6,
         },
         data: dataNodes,
-        links,
+        // 使用 Provider 计算得到的一分钟前 -> 当前 的流向
+        links: sankeyLinksMinuteAgoToNow,
         animationDuration: 100,
         animationEasing: 'cubicOut',
       },
