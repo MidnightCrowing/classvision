@@ -4,9 +4,11 @@ import ReactECharts from 'echarts-for-react'
 import { FrostedCard } from '~/components/FrostedCard'
 import { behaviors } from '~/constants/behaviors.ts'
 import { useClassVisionData } from '~/providers/ClassVisionProvider'
+import { useTheme } from '~/providers/ThemeProvider'
 
 export default function BehaviorSankey({ ...props }) {
   const { sankeyLinksMinuteAgoToNow } = useClassVisionData()
+  const { echartsTheme, isDark } = useTheme()
 
   // 固定节点位置配置（左右两列，顺序按 behaviors 常量）
   const leftX = 0.05
@@ -28,8 +30,9 @@ export default function BehaviorSankey({ ...props }) {
     tooltip: {
       trigger: 'item',
       triggerOn: 'mousemove',
-      backgroundColor: 'rgba(255,255,255,0.7)',
-      textStyle: { color: '#000' },
+      backgroundColor: isDark ? 'rgba(36,41,47,0.92)' : 'rgba(255,255,255,0.9)',
+      borderColor: isDark ? '#30363d' : '#e5e5e5',
+      textStyle: { color: isDark ? '#e6edf3' : '#000' },
       formatter: (p: any) => {
         if (p.dataType === 'edge') {
           return `${p.data.source} → ${p.data.target}<br/>人数: ${p.data.value}`
@@ -60,7 +63,7 @@ export default function BehaviorSankey({ ...props }) {
 
   return (
     <FrostedCard title="学生行为转移桑基图" {...props}>
-      <ReactECharts option={option} style={{ width: '100%', height: '100%', borderRadius: 12 }} />
+      <ReactECharts option={option} theme={echartsTheme} style={{ width: '100%', height: '100%', borderRadius: 12 }} />
     </FrostedCard>
   )
 }

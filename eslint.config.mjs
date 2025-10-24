@@ -3,6 +3,7 @@ import simpleImportSort from 'eslint-plugin-simple-import-sort'
 
 export default antfu({
   react: true,
+  vue: false,
   UnoCSS: true,
 
   formatters: {

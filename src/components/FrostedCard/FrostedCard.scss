@@ -33,3 +33,23 @@
     @apply text-0.95rem lh-1.6;
   }
 }
+
+// Dark mode override
+.dark {
+  .frosted-card {
+    background: rgba(22, 27, 34, 0.55);
+    color: #e6edf3;
+    border: 1px solid rgba(240, 246, 252, 0.08);
+    outline: 1px solid rgba(240, 246, 252, 0.06);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+
+    &:not(.no-hover):hover {
+      background: rgba(22, 27, 34, 0.7);
+      box-shadow: 0 6px 22px rgba(0, 0, 0, 0.35);
+    }
+
+    .frosted-card-header {
+      color: #79c0ff;
+    }
+  }
+}

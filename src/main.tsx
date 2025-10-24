@@ -1,18 +1,19 @@
 import './styles'
+import './lib/echartsTheme'
 
-import { FluentProvider, webLightTheme } from '@fluentui/react-components'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 
 import App from './App'
 import { ClassVisionProvider } from './providers/ClassVisionProvider'
+import { ThemeProvider } from './providers/ThemeProvider'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <FluentProvider theme={webLightTheme}>
+    <ThemeProvider>
       <ClassVisionProvider>
         <App />
       </ClassVisionProvider>
-    </FluentProvider>
+    </ThemeProvider>
   </StrictMode>,
 )

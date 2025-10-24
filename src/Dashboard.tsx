@@ -1,5 +1,7 @@
 import { lazy } from 'react'
 
+import { ThemeToggle } from '~/components/ThemeToggle'
+
 const AttentionHeatmap = lazy(() => import('~/components/AttentionHeatmap.tsx'))
 const BehaviorBarChart = lazy(() => import('~/components/BehaviorBarChart.tsx'))
 const BehaviorSankey = lazy(() => import('~/components/BehaviorSankey.tsx'))
@@ -12,8 +14,10 @@ export function Dashboard() {
   return (
     <div
       bg="[linear-gradient(135deg,_#f5f8ff_0%,_#eaf2ff_100%)]"
+      dark:bg="[linear-gradient(135deg,_#0c111b_0%,_#0b1220_100%)]"
       size-full
     >
+      <ThemeToggle />
       {/* center module */}
       <ProcessedVideo
         absolute

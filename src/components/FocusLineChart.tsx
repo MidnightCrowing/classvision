@@ -4,6 +4,7 @@ import { renderToStaticMarkup } from 'react-dom/server'
 
 import { FrostedCard } from '~/components/FrostedCard'
 import { useClassVisionData } from '~/providers/ClassVisionProvider'
+import { useTheme } from '~/providers/ThemeProvider'
 
 function TooltipRow({ color, name, value }: { color: string, name: string, value: number }) {
   return (
@@ -29,6 +30,10 @@ function TooltipRow({ color, name, value }: { color: string, name: string, value
 
 export default function FocusLineChart({ ...props }) {
   const { focusSeriesLastMinute } = useClassVisionData()
+  const { echartsTheme, isDark } = useTheme()
+
+  const textColor = isDark ? '#e6edf3' : '#000'
+  const axisColor = isDark ? '#6e7681' : '#999'
 
   const times = focusSeriesLastMinute.map(d => d.time)
   const high = focusSeriesLastMinute.map(d => d.HighlyFocused)
@@ -59,21 +64,22 @@ export default function FocusLineChart({ ...props }) {
     },
     legend: {
       data: ['高度专注', '一般专注', '注意力低'],
-      textStyle: { color: '#000' },
+      textStyle: { color: textColor },
     },
     xAxis: {
       type: 'category',
       boundaryGap: false,
       data: times,
-      axisLabel: { color: '#000' },
-      axisLine: { lineStyle: { color: '#999' } },
+      axisLabel: { color: textColor },
+      axisLine: { lineStyle: { color: axisColor } },
     },
     yAxis: {
       type: 'value',
       name: '人数',
       min: 0,
-      axisLabel: { color: '#000' },
-      axisLine: { lineStyle: { color: '#999' } },
+      axisLabel: { color: textColor },
+      axisLine: { lineStyle: { color: axisColor } },
+      splitLine: { lineStyle: { color: isDark ? 'rgba(110,118,129,0.2)' : '#eee' } },
     },
     series: [
       {
@@ -113,7 +119,7 @@ export default function FocusLineChart({ ...props }) {
       title="专注度人数折线图"
       {...props}
     >
-      <ReactECharts option={option} notMerge={true} lazyUpdate={true} style={{ width: '100%', height: '100%', borderRadius: 12 }} />
+      <ReactECharts option={option} theme={echartsTheme} notMerge={true} lazyUpdate={true} style={{ width: '100%', height: '100%', borderRadius: 12 }} />
     </FrostedCard>
   )
 }
